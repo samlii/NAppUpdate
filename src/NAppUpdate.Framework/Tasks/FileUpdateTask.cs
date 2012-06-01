@@ -87,7 +87,11 @@ namespace NAppUpdate.Framework.Tasks
 
             // Create a backup copy if target exists
             if (File.Exists(destinationFile))
+            {
+                if (!Directory.Exists(Path.GetDirectoryName(Path.Combine(UpdateManager.Instance.BackupFolder, LocalPath))))
+                    Utils.FileSystem.CreateDirectoryStructure(Path.GetDirectoryName(Path.Combine(UpdateManager.Instance.BackupFolder, LocalPath)), false);
                 File.Copy(destinationFile, Path.Combine(UpdateManager.Instance.BackupFolder, LocalPath));
+            }
 
             // Only enable execution if the apply attribute was set to hot-swap
             if (CanHotSwap)
@@ -99,11 +103,11 @@ namespace NAppUpdate.Framework.Tasks
                     File.Move(tempFile, destinationFile);
                 	tempFile = null;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    // TODO: Don't rethrow, but rather revert and make this a cold update?
-                    throw new UpdateProcessFailedException("Couldn't move hot-swap file into position", ex);
-                }
+					// Failed hot swap file tasks should now downgrade to cold tasks automatically
+					CanHotSwap = false;
+				}
             }
             return true;
         }
@@ -127,6 +131,14 @@ namespace NAppUpdate.Framework.Tasks
             return true;
         }
 
+        public bool MustRunPrivileged() {
+            if (File.Exists(destinationFile)) {
+                return !Utils.PermissionsCheck.HaveWritePermissionsForFileOrFolder(destinationFile);
+            } else {
+                return false;
+            }
+        }
+        
         #endregion
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NAppUpdate.Framework.Conditions
 {
@@ -47,8 +46,8 @@ namespace NAppUpdate.Framework.Conditions
                 this._ConditionType = typ;
             }
 
-            public IUpdateCondition _Condition;
-            public ConditionType _ConditionType;
+            public readonly IUpdateCondition _Condition;
+            public readonly ConditionType _ConditionType;
         }
 
         public BooleanCondition()
@@ -87,11 +86,13 @@ namespace NAppUpdate.Framework.Conditions
             if (ChildConditions == null)
                 return true;
 
+            // perform the update if Passed == true
+            // otherwise, do not perform the update
             bool Passed = true, firstRun = true;
             foreach (ConditionItem item in ChildConditions)
             {
                 // If after the first iteration, accept as fulfilled if we are at an OR clause and the conditions
-                // before this checked OK
+                // before this checked OK (i.e. update needed)
                 if (!firstRun)
                 {
                     if (Passed && (item._ConditionType & ConditionType.OR) > 0)
