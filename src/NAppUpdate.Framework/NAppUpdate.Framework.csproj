@@ -56,6 +56,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>\\chnas02\dev_share\Libraries\SharpZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -83,6 +86,7 @@
     <Compile Include="Sources\IUpdateSource.cs" />
     <Compile Include="Sources\MemorySource.cs" />
     <Compile Include="Sources\SimpleWebSource.cs" />
+    <Compile Include="Tasks\UpdateFromZipTask.cs" />
     <Compile Include="Tasks\FileUpdateTask.cs" />
     <Compile Include="Tasks\IUpdateTask.cs" />
     <Compile Include="Tasks\RegistryTask.cs" />
